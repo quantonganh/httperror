@@ -21,5 +21,5 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(e.Status)
-	w.Write([]byte(fmt.Sprint("message: %s", e.Error())))
+	w.Write([]byte(fmt.Sprintf("message: %s", e.Error())))
 }
