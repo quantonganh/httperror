@@ -130,3 +130,16 @@ func PerClientRateLimiter(interval time.Duration) func(next func(w http.Response
 		})
 	}
 }
+
+func RequestIDHandler(fieldKey string) func(next http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			requestID := r.Header.Get("Request-Id")
+			log := hlog.FromRequest(r)
+			log.UpdateContext(func(c zerolog.Context) zerolog.Context {
+				return c.Str(fieldKey, requestID)
+			})
+			next.ServeHTTP(w, r)
+		})
+	}
+}
